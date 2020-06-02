@@ -1,13 +1,9 @@
-jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: kciter/aws-ecr-action@v1
-      with:
-        access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-        repo: hello-devops
-        region: eu-west-3
-        tags: latest,${{ github.sha }}
-        create_repo: true
+- run: docker build --tag my-image:v1 .
+- name: Push to ECR
+  id: ecr
+  uses: jwalton/gh-ecr-push@v1
+  with:
+    access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    region: us-east-3
+    image: my-image:v1
